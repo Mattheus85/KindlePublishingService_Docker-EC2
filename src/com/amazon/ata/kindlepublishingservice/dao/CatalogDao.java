@@ -2,15 +2,11 @@ package com.amazon.ata.kindlepublishingservice.dao;
 
 import com.amazon.ata.kindlepublishingservice.dynamodb.models.CatalogItemVersion;
 import com.amazon.ata.kindlepublishingservice.exceptions.BookNotFoundException;
-import com.amazon.ata.kindlepublishingservice.publishing.KindleFormattedBook;
-import com.amazon.ata.kindlepublishingservice.utils.KindlePublishingUtils;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import javax.inject.Inject;
+import java.util.List;
 
 public class CatalogDao {
 
@@ -29,6 +25,7 @@ public class CatalogDao {
     /**
      * Returns the latest version of the book from the catalog corresponding to the specified book id.
      * Throws a BookNotFoundException if the latest version is not active or no version is found.
+     *
      * @param bookId Id associated with the book.
      * @return The corresponding CatalogItem from the catalog table.
      */
@@ -47,10 +44,10 @@ public class CatalogDao {
         CatalogItemVersion book = new CatalogItemVersion();
         book.setBookId(bookId);
 
-        DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression()
-            .withHashKeyValues(book)
-            .withScanIndexForward(false)
-            .withLimit(1);
+        DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression<CatalogItemVersion>()
+                .withHashKeyValues(book)
+                .withScanIndexForward(false)
+                .withLimit(1);
 
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
         if (results.isEmpty()) {
@@ -64,5 +61,11 @@ public class CatalogDao {
         book.setInactive(true);
         dynamoDbMapper.save(book);
         return book;
+    }
+
+    public void validateBookExists(String bookId) {
+        if (getLatestVersionOfBook(bookId) == null) {
+            throw new BookNotFoundException(String.format("No book found for id: %s", bookId));
+        }
     }
 }
