@@ -1,15 +1,10 @@
 package com.amazon.ata.kindlepublishingservice.publishing;
 
 import javax.inject.Inject;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class BookPublishRequestManager {
-    Queue<BookPublishRequest> bookPublishRequestList = new LinkedList<>();
-
-    public BookPublishRequestManager() {}
+    Queue<BookPublishRequest> bookPublishRequestList = new ArrayDeque<>();
 
     @Inject
     public BookPublishRequestManager(Queue<BookPublishRequest> bookPublishRequestList) {

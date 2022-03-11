@@ -11,6 +11,7 @@ import com.amazon.ata.kindlepublishingservice.publishing.BookPublishRequest;
 import com.amazon.ata.kindlepublishingservice.publishing.BookPublishRequestManager;
 
 import javax.inject.Inject;
+import java.util.*;
 
 /**
  * Implementation of the SubmitBookForPublishingActivity for ATACurriculumKindlePublishingService's
@@ -45,7 +46,10 @@ public class SubmitBookForPublishingActivity {
      */
     public SubmitBookForPublishingResponse execute(SubmitBookForPublishingRequest request) {
         final BookPublishRequest bookPublishRequest = BookPublishRequestConverter.toBookPublishRequest(request);
-        BookPublishRequestManager bookPublishRequestManager = new BookPublishRequestManager();
+
+        Queue<BookPublishRequest> bookPublishRequestQueue = new ArrayDeque<>();
+        bookPublishRequestQueue.add(bookPublishRequest);
+        BookPublishRequestManager bookPublishRequestManager = new BookPublishRequestManager(bookPublishRequestQueue);
 
         if (request.getBookId() != null) {
             catalogDao.validateBookExists(request.getBookId());
