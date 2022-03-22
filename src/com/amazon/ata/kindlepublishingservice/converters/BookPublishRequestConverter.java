@@ -16,8 +16,8 @@ public class BookPublishRequestConverter {
      * Converts the given {@link SubmitBookForPublishingRequest} object to a {@link BookPublishRequest}. Generates
      * a publishing record id.
      *
-     * @param request The SubmitBookForPublishing object to convert.
-     * @return The converted BookPublishRequest.
+     * @param request   The SubmitBookForPublishing object to convert.
+     * @return          The converted BookPublishRequest.
      */
     public static BookPublishRequest toBookPublishRequest(SubmitBookForPublishingRequest request) {
 

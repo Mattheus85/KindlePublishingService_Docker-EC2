@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 public class BookPublishRequestManager {
-    Queue<BookPublishRequest> bookPublishRequestList = new ArrayDeque<>();
+    Queue<BookPublishRequest> bookPublishRequestList;
 
     @Inject
     public BookPublishRequestManager(Queue<BookPublishRequest> bookPublishRequestList) {
