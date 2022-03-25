@@ -86,14 +86,12 @@ public class PublishingStatusDao {
      * @return                      The PublishingStatusItem List
      */
     public List<PublishingStatusItem> getPublishingStatuses(String publishingStatusId) {
+
         PublishingStatusItem item = new PublishingStatusItem();
         item.setPublishingRecordId(publishingStatusId);
 
-        DynamoDBQueryExpression<PublishingStatusItem> queryExpression =
-                new DynamoDBQueryExpression<PublishingStatusItem>().withHashKeyValues(item);
-
-        PaginatedQueryList<PublishingStatusItem> itemList =
-                dynamoDbMapper.query(PublishingStatusItem.class, queryExpression);
+        PaginatedQueryList<PublishingStatusItem> itemList = dynamoDbMapper.query(PublishingStatusItem.class,
+                        new DynamoDBQueryExpression<PublishingStatusItem>().withHashKeyValues(item));
 
         if (itemList == null || itemList.isEmpty()) {
             throw new PublishingStatusNotFoundException(String.format("No publishing status found for id: %s",

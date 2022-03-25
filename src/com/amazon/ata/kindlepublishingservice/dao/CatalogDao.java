@@ -26,8 +26,8 @@ public class CatalogDao {
      * Returns the latest version of the book from the catalog corresponding to the specified book id.
      * Throws a BookNotFoundException if the latest version is not active or no version is found.
      *
-     * @param bookId Id associated with the book.
-     * @return The corresponding CatalogItem from the catalog table.
+     * @param bookId    Id associated with the book.
+     * @return          The corresponding {@link CatalogItemVersion} from the catalog table.
      */
     public CatalogItemVersion getBookFromCatalog(String bookId) {
         CatalogItemVersion book = getLatestVersionOfBook(bookId);
@@ -39,7 +39,13 @@ public class CatalogDao {
         return book;
     }
 
-    // Returns null if no version exists for the provided bookId
+    /**
+     * Returns the latest version of the book from the catalog corresponding to the specified book id.
+     * Returns null if no version is found.
+     *
+     * @param bookId    Id associated with the book.
+     * @return          The corresponding {@link CatalogItemVersion} from the catalog table.
+     */
     private CatalogItemVersion getLatestVersionOfBook(String bookId) {
         CatalogItemVersion book = new CatalogItemVersion();
         book.setBookId(bookId);
@@ -56,6 +62,13 @@ public class CatalogDao {
         return results.get(0);
     }
 
+    /**
+     * Performs a soft remove (sets the inactive property to TRUE)
+     * of the {@link CatalogItemVersion} corresponding to the bookId.
+     *
+     * @param bookId    Id associated with the book to remove.
+     * @return          The corresponding {@link CatalogItemVersion} which has been removed.
+     */
     public CatalogItemVersion removeBookFromCatalog(String bookId) {
         CatalogItemVersion book = getBookFromCatalog(bookId);
         book.setInactive(true);
@@ -63,6 +76,11 @@ public class CatalogDao {
         return book;
     }
 
+    /**
+     * Throws {@link BookNotFoundException} if the book does not exist in the catalog table.
+     *
+     * @param bookId Id associated with the book.
+     */
     public void validateBookExists(String bookId) {
         if (getLatestVersionOfBook(bookId) == null) {
             throw new BookNotFoundException(String.format("No book found for id: %s", bookId));
