@@ -23,6 +23,7 @@ public class SubmitBookForPublishingActivity {
 
     private PublishingStatusDao publishingStatusDao;
     private CatalogDao catalogDao;
+    private BookPublishRequestManager requestManager;
 
     /**
      * Instantiates a new SubmitBookForPublishingActivity object.
@@ -30,9 +31,11 @@ public class SubmitBookForPublishingActivity {
      * @param publishingStatusDao PublishingStatusDao to access the publishing status table.
      */
     @Inject
-    public SubmitBookForPublishingActivity(PublishingStatusDao publishingStatusDao, CatalogDao catalogDao) {
+    public SubmitBookForPublishingActivity(PublishingStatusDao publishingStatusDao, CatalogDao catalogDao,
+                                           BookPublishRequestManager requestManager) {
         this.publishingStatusDao = publishingStatusDao;
         this.catalogDao = catalogDao;
+        this.requestManager = requestManager;
     }
 
     /**
@@ -45,17 +48,12 @@ public class SubmitBookForPublishingActivity {
      * to check the publishing state of the book.
      */
     public SubmitBookForPublishingResponse execute(SubmitBookForPublishingRequest request) {
-        final BookPublishRequest bookPublishRequest = BookPublishRequestConverter.toBookPublishRequest(request);
-
-        Queue<BookPublishRequest> bookPublishRequestQueue = new ArrayDeque<>();
-        bookPublishRequestQueue.add(bookPublishRequest);
-        BookPublishRequestManager bookPublishRequestManager = new BookPublishRequestManager(bookPublishRequestQueue);
-
         if (request.getBookId() != null) {
             catalogDao.validateBookExists(request.getBookId());
         }
 
-        bookPublishRequestManager.addBookPublishRequest(bookPublishRequest);
+        final BookPublishRequest bookPublishRequest = BookPublishRequestConverter.toBookPublishRequest(request);
+        requestManager.addBookPublishRequest(bookPublishRequest);
 
         PublishingStatusItem item = publishingStatusDao.setPublishingStatus(bookPublishRequest.getPublishingRecordId(),
                 PublishingRecordStatus.QUEUED,

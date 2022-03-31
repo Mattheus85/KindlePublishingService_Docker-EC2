@@ -19,7 +19,8 @@ public class GetPublishingStatusActivity {
 
     public GetPublishingStatusResponse execute(GetPublishingStatusRequest publishingStatusRequest) {
 
-        List<PublishingStatusItem> itemList = publishingStatusDao.getPublishingStatuses(publishingStatusRequest.getPublishingRecordId());
+        List<PublishingStatusItem> itemList = publishingStatusDao
+                .getPublishingStatuses(publishingStatusRequest.getPublishingRecordId());
 
         return GetPublishingStatusResponse.builder()
                 .withPublishingStatusHistory(PublishingStatusConverter.toPublishingStatusRecordList(itemList))

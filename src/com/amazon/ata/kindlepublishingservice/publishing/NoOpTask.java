@@ -10,7 +10,8 @@ import javax.inject.Inject;
  * comes with the service, but should be removed once your publishing task that implements Runnable is created and the
  * providePublishingTask() method is updated to return it in the PublishingModiule.
  */
-public class NoOpTask implements Runnable {
+public class
+NoOpTask implements Runnable {
 
     private static final Logger LOGGER = LogManager.getLogger(BookPublisher.class);
 

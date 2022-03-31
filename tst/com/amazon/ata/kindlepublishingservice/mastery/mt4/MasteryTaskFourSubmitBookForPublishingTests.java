@@ -96,7 +96,7 @@ public class MasteryTaskFourSubmitBookForPublishingTests extends IntegrationTest
     @Test
     public void submitBookForPublishing_existingBookId_publishesAndCreatesNewBookVersion() {
         // GIVEN
-        String bookId = "book." + UUID.randomUUID().toString();
+        String bookId = "book." + UUID.randomUUID();
         SubmitBookForPublishingRequest request = SubmitBookForPublishingRequest.builder()
             .withAuthor("author")
             .withBookId(bookId)
