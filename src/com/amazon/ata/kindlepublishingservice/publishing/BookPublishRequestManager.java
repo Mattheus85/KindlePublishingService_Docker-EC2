@@ -1,7 +1,8 @@
 package com.amazon.ata.kindlepublishingservice.publishing;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Objects;
+import java.util.Queue;
 
 public class BookPublishRequestManager {
     private final Queue<BookPublishRequest> bookPublishRequestQueue;
