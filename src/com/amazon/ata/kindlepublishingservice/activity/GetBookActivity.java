@@ -1,5 +1,6 @@
 package com.amazon.ata.kindlepublishingservice.activity;
 
+import com.amazon.ata.kindlepublishingservice.clients.RecommendationsServiceCachingClient;
 import com.amazon.ata.kindlepublishingservice.clients.RecommendationsServiceClient;
 import com.amazon.ata.kindlepublishingservice.converters.CatalogItemConverter;
 import com.amazon.ata.recommendationsservice.types.BookGenre;
@@ -24,18 +25,19 @@ import javax.inject.Inject;
 
 public class GetBookActivity {
     private RecommendationsServiceClient recommendationServiceClient;
+    private RecommendationsServiceCachingClient cachingClient;
     private CatalogDao catalogDao;
 
     /**
      * Instantiates a new GetBookActivity object.
      *
      * @param catalogDao CatalogDao to access the Catalog table.
-     * @param recommendationServiceClient Returns recommendations based on genre.
+     * @param cachingClient Returns recommendations based on genre.
      */
     @Inject
-    public GetBookActivity(CatalogDao catalogDao, RecommendationsServiceClient recommendationServiceClient) {
+    public GetBookActivity(CatalogDao catalogDao, RecommendationsServiceCachingClient cachingClient) {
         this.catalogDao = catalogDao;
-        this.recommendationServiceClient = recommendationServiceClient;
+        this.cachingClient = cachingClient;
     }
 
     /**
@@ -48,7 +50,7 @@ public class GetBookActivity {
     public GetBookResponse execute(final GetBookRequest request) {
         CatalogItemVersion catalogItem = catalogDao.getBookFromCatalog(request.getBookId());
 
-        List<BookRecommendation> recommendations = recommendationServiceClient.getBookRecommendations(
+        List<BookRecommendation> recommendations = cachingClient.getBookRecommendations(
             BookGenre.valueOf(catalogItem.getGenre().name()));
 
         return GetBookResponse.builder()

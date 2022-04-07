@@ -1,10 +1,10 @@
 package com.amazon.ata.kindlepublishingservice.activity;
 
+import com.amazon.ata.kindlepublishingservice.clients.RecommendationsServiceCachingClient;
 import com.amazon.ata.recommendationsservice.types.BookGenre;
 import com.amazon.ata.kindlepublishingservice.models.Book;
 import com.amazon.ata.kindlepublishingservice.models.requests.GetBookRequest;
 import com.amazon.ata.kindlepublishingservice.models.response.GetBookResponse;
-import com.amazon.ata.kindlepublishingservice.clients.RecommendationsServiceClient;
 import com.amazon.ata.kindlepublishingservice.dao.CatalogDao;
 import com.amazon.ata.kindlepublishingservice.dynamodb.models.CatalogItemVersion;
 import com.amazon.ata.kindlepublishingservice.exceptions.BookNotFoundException;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 public class GetBookActivityTest {
 
@@ -35,14 +35,14 @@ public class GetBookActivityTest {
     private CatalogDao catalogDao;
 
     @Mock
-    private RecommendationsServiceClient recommendationsServiceClient;
+    private RecommendationsServiceCachingClient cachingClient;
 
     @InjectMocks
     private GetBookActivity activity;
 
     @BeforeEach
     public void setup(){
-        initMocks(this);
+        openMocks(this);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class GetBookActivityTest {
 
         List<BookRecommendation> bookRecommendations = new ArrayList<>();
         bookRecommendations.add(new BookRecommendation(TITLE, AUTHOR, ASIN));
-        when(recommendationsServiceClient.getBookRecommendations(BookGenre.FANTASY)).thenReturn(bookRecommendations);
+        when(cachingClient.getBookRecommendations(BookGenre.FANTASY)).thenReturn(bookRecommendations);
         when(catalogDao.getBookFromCatalog(BOOK_ID)).thenReturn(catalogItem);
 
         // WHEN
