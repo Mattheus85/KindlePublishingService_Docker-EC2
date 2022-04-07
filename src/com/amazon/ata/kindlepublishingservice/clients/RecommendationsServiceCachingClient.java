@@ -8,6 +8,7 @@ import com.google.common.cache.LoadingCache;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 public class RecommendationsServiceCachingClient {
     private final LoadingCache<BookGenre, List<BookRecommendation>> loadingCache;
@@ -20,5 +21,9 @@ public class RecommendationsServiceCachingClient {
 
     public List<BookRecommendation> getBookRecommendations(BookGenre genre) {
         return loadingCache.getUnchecked(genre);
+    }
+
+    public ConcurrentMap<BookGenre, List<BookRecommendation>> getLoadingCacheMap() {
+        return loadingCache.asMap();
     }
 }
